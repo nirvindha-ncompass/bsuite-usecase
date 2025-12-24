@@ -1,0 +1,44 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EnginesModule = void 0;
+const common_1 = require("@nestjs/common");
+const engine_selector_service_1 = require("./engine-selector.service");
+const postgresql_engine_1 = require("./postgresql.engine");
+const postgresql_docker_engine_1 = require("./postgresql-docker.engine");
+const clickhouse_engine_1 = require("./clickhouse.engine");
+const clickhouse_local_engine_1 = require("./clickhouse-local.engine");
+const duckdb_engine_1 = require("./duckdb.engine");
+const duckdb_docker_engine_1 = require("./duckdb-docker.engine");
+let EnginesModule = class EnginesModule {
+};
+exports.EnginesModule = EnginesModule;
+exports.EnginesModule = EnginesModule = __decorate([
+    (0, common_1.Global)(),
+    (0, common_1.Module)({
+        providers: [
+            engine_selector_service_1.EngineSelectorService,
+            postgresql_engine_1.PostgresqlEngine,
+            postgresql_docker_engine_1.PostgresqlDockerEngine,
+            clickhouse_engine_1.ClickhouseEngine,
+            clickhouse_local_engine_1.ClickhouseLocalEngine,
+            duckdb_engine_1.DuckdbEngine,
+            duckdb_docker_engine_1.DuckdbDockerEngine,
+        ],
+        exports: [
+            engine_selector_service_1.EngineSelectorService,
+            postgresql_engine_1.PostgresqlEngine,
+            postgresql_docker_engine_1.PostgresqlDockerEngine,
+            clickhouse_engine_1.ClickhouseEngine,
+            clickhouse_local_engine_1.ClickhouseLocalEngine,
+            duckdb_engine_1.DuckdbEngine,
+            duckdb_docker_engine_1.DuckdbDockerEngine,
+        ],
+    })
+], EnginesModule);
+//# sourceMappingURL=engines.module.js.map
