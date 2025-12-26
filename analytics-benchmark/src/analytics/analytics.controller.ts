@@ -30,7 +30,7 @@ export class AnalyticsController {
    */
   @Get('revenue-by-merchant')
   @ApiOperation({ summary: 'Get revenue aggregated by merchant' })
-  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'Returns merchant revenue data', type: AnalyticsResponseDto })
   async getRevenueByMerchant(
@@ -47,7 +47,7 @@ export class AnalyticsController {
    */
   @Get('daily-transactions')
   @ApiOperation({ summary: 'Get daily transaction volumes' })
-  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
   @ApiQuery({ name: 'days', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'Returns daily transaction data', type: AnalyticsResponseDto })
   async getDailyTransactions(
@@ -64,7 +64,7 @@ export class AnalyticsController {
    */
   @Get('customer-spending')
   @ApiOperation({ summary: 'Get top customers by spending' })
-  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'Returns customer spending data', type: AnalyticsResponseDto })
   async getCustomerSpending(
@@ -80,7 +80,7 @@ export class AnalyticsController {
    */
   @Get('category-distribution')
   @ApiOperation({ summary: 'Get transaction distribution by category' })
-  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
   @ApiResponse({ status: 200, description: 'Returns category distribution data', type: AnalyticsResponseDto })
   async getCategoryDistribution(
     @Query('engine') engine?: EngineType,
@@ -94,7 +94,7 @@ export class AnalyticsController {
    */
   @Get('status-summary')
   @ApiOperation({ summary: 'Get transaction status summary' })
-  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
   @ApiResponse({ status: 200, description: 'Returns status summary data', type: AnalyticsResponseDto })
   async getStatusSummary(
     @Query('engine') engine?: EngineType,

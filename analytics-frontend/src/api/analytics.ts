@@ -7,11 +7,8 @@ const API_BASE_URL = 'https://bsuite-usecase-backend.nclabs.tech';
  * Supported analytics engine types.
  */
 export type EngineType = 
-  | 'postgresql-local' 
   | 'postgresql-docker' 
-  | 'clickhouse-local'
   | 'clickhouse-docker' 
-  | 'duckdb-local' 
   | 'duckdb-docker';
 
 /**

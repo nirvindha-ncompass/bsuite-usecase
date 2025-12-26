@@ -117,11 +117,8 @@ export class AnalyticsService {
    */
   async runBenchmark(queryType: string): Promise<BenchmarkResponseDto> {
     const engines: EngineType[] = [
-      'postgresql-local',
       'postgresql-docker',
-      'clickhouse-local',
       'clickhouse-docker',
-      'duckdb-local',
       'duckdb-docker',
     ];
     const results: any[] = [];

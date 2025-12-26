@@ -27,11 +27,8 @@ const QUERY_OPTIONS: QueryOption[] = [
 ];
 
 const ENGINES: EngineOption[] = [
-    { id: 'postgresql-local', label: 'PostgreSQL Local', shortLabel: 'PG Local', type: 'local', color: 'postgresql' },
     { id: 'postgresql-docker', label: 'PostgreSQL Docker', shortLabel: 'PG Docker', type: 'docker', color: 'postgresql' },
-    { id: 'clickhouse-local', label: 'ClickHouse Local', shortLabel: 'CH Local', type: 'local', color: 'clickhouse' },
     { id: 'clickhouse-docker', label: 'ClickHouse Docker', shortLabel: 'CH Docker', type: 'docker', color: 'clickhouse' },
-    { id: 'duckdb-local', label: 'DuckDB Local', shortLabel: 'Duck Local', type: 'local', color: 'duckdb' },
     { id: 'duckdb-docker', label: 'DuckDB Docker', shortLabel: 'Duck Docker', type: 'docker', color: 'duckdb' },
 ];
 
@@ -40,7 +37,7 @@ const ENGINES: EngineOption[] = [
  * Orchestrates the analytics dashboard, including engine selection, query execution, and result visualization.
  */
 function App() {
-    const [selectedEngine, setSelectedEngine] = useState<EngineType>('postgresql-local');
+    const [selectedEngine, setSelectedEngine] = useState<EngineType>('postgresql-docker');
     const [selectedQuery, setSelectedQuery] = useState<QueryType>('status-summary');
     const [result, setResult] = useState<AnalyticsResponse | null>(null);
     const [benchmarkResult, setBenchmarkResult] = useState<BenchmarkResponse | null>(null);
@@ -97,7 +94,7 @@ function App() {
         setBenchmarking(true);
         setError(null);
         setResult(null);
-        setProgress({ current: 0, total: 6, engine: '' });
+        setProgress({ current: 0, total: 3, engine: '' });
 
         try {
             // Run queries sequentially and update progress
@@ -105,7 +102,7 @@ function App() {
 
             for (let i = 0; i < ENGINES.length; i++) {
                 const engine = ENGINES[i];
-                setProgress({ current: i, total: 6, engine: engine.label });
+                setProgress({ current: i, total: 3, engine: engine.label });
 
                 try {
                     let response: AnalyticsResponse;
@@ -146,7 +143,7 @@ function App() {
                 }
             }
 
-            setProgress({ current: 6, total: 6, engine: 'Complete' });
+            setProgress({ current: 3, total: 3, engine: 'Complete' });
 
             // Find fastest
             const successfulResults = results.filter(r => r.success && r.executionTimeMs > 0);
@@ -261,26 +258,9 @@ function App() {
                         </div>
 
                         <div className="engine-group">
-                            <span className="engine-group-label">🖥️ Local</span>
-                            <div className="engine-selector">
-                                {ENGINES.filter(e => e.type === 'local').map((engine) => (
-                                    <button
-                                        key={engine.id}
-                                        className={`engine-button ${selectedEngine === engine.id ? `active ${engine.color}` : ''}`}
-                                        onClick={() => setSelectedEngine(engine.id)}
-                                        title={engine.label}
-                                    >
-                                        <span className="engine-indicator" />
-                                        {engine.shortLabel}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="engine-group">
                             <span className="engine-group-label">🐳 Docker</span>
                             <div className="engine-selector">
-                                {ENGINES.filter(e => e.type === 'docker').map((engine) => (
+                                {ENGINES.map((engine) => (
                                     <button
                                         key={engine.id}
                                         className={`engine-button ${selectedEngine === engine.id ? `active ${engine.color}` : ''}`}
@@ -329,7 +309,7 @@ function App() {
                                 onClick={runBenchmark}
                                 disabled={loading || benchmarking}
                             >
-                                {benchmarking ? 'Running...' : '🏁 Benchmark All 6'}
+                                {benchmarking ? 'Running...' : '🏁 Benchmark All 3'}
                             </button>
                         </div>
                     </div>
