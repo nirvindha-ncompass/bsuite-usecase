@@ -39,7 +39,7 @@ export class ClickhouseEngine implements AnalyticsEngine, OnModuleInit {
       const { ClickHouse } = require('clickhouse');
       
       this.client = new ClickHouse({
-        url: 'http://localhost',
+        url: 'http://analytics-clickhouse-docker',
         port: 8123,
         debug: false,
         basicAuth: {

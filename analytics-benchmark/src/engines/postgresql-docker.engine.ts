@@ -18,8 +18,8 @@ export class PostgresqlDockerEngine implements AnalyticsEngine, OnModuleInit {
   async onModuleInit() {
     try {
       this.pool = new Pool({
-        host: 'localhost',
-        port: 5433,
+        host: 'postgres-docker',
+        port: 5432,
         database: 'datastuff',
         user: 'postgres',
         password: 'Password',
