@@ -54,6 +54,54 @@ services:
       postgres-docker:
         condition: service_healthy
 
+  analytics-backend:
+    build:
+      context: ./analytics-benchmark
+      dockerfile: Dockerfile
+    container_name: analytics-backend
+    env_file:
+      - ./analytics-benchmark/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - analytics-network
+    depends_on:
+      postgres-docker:
+        condition: service_healthy
+      clickhouse-docker:
+        condition: service_started
+      duckdb-docker:
+        condition: service_started
+    restart: unless-stopped
+
+  analytics-frontend:
+    build:
+      context: ./analytics-frontend
+      dockerfile: Dockerfile
+    container_name: analytics-frontend
+    ports:
+      - "3001:3001"
+    networks:
+      - analytics-network
+    depends_on:
+      - analytics-backend
+    restart: unless-stopped
+
+  data-generator:
+    build:
+      context: ./data-generator   
+      dockerfile: Dockerfile
+    container_name: analytics-data-generator
+    env_file:
+      - ./analytics-benchmark/.env
+    networks:
+      - analytics-network
+    depends_on:
+      - postgres-docker
+    restart: "no"
+    command: ["python", "seed_docker_10m.py"]
+
+          
 volumes:
   postgres_docker_data:
   clickhouse_docker_data:
