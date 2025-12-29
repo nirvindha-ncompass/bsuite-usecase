@@ -347,4 +347,97 @@ export class ClickhouseEngine implements AnalyticsEngine, OnModuleInit {
       };
     }
   }
+
+  async getSimple1M(): Promise<any> {
+    if (!this.isAvailable || !this.client) {
+      return this.notAvailableResponse();
+    }
+
+    const transactionsPg = this.getPgTable('transactions');
+    const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 1000000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.client.query(query).toPromise();
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result,
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'clickhouse-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'clickhouse-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple5(): Promise<any> {
+    if (!this.isAvailable || !this.client) {
+      return this.notAvailableResponse();
+    }
+
+    const transactionsPg = this.getPgTable('transactions');
+    const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 5`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.client.query(query).toPromise();
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result,
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'clickhouse-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'clickhouse-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple100K(): Promise<any> {
+    if (!this.isAvailable || !this.client) {
+      return this.notAvailableResponse();
+    }
+
+    const transactionsPg = this.getPgTable('transactions');
+    const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 100000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.client.query(query).toPromise();
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result,
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'clickhouse-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'clickhouse-docker',
+        error: error.message,
+      };
+    }
+  }
 }

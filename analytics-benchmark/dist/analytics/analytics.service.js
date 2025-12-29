@@ -104,13 +104,58 @@ let AnalyticsService = AnalyticsService_1 = class AnalyticsService {
             throw error;
         }
     }
+    async getSimple1M(engineType) {
+        const engine = this.engineSelector.getEngine(engineType);
+        const engineName = engineType || this.engineSelector.getDefaultEngine();
+        this.logger.log(`Executing getSimple1M on ${engineName} engine`);
+        try {
+            const result = await engine.getSimple1M();
+            return {
+                ...result,
+                engine: engineName,
+            };
+        }
+        catch (error) {
+            this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+            throw error;
+        }
+    }
+    async getSimple5(engineType) {
+        const engine = this.engineSelector.getEngine(engineType);
+        const engineName = engineType || this.engineSelector.getDefaultEngine();
+        this.logger.log(`Executing getSimple5 on ${engineName} engine`);
+        try {
+            const result = await engine.getSimple5();
+            return {
+                ...result,
+                engine: engineName,
+            };
+        }
+        catch (error) {
+            this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+            throw error;
+        }
+    }
+    async getSimple100K(engineType) {
+        const engine = this.engineSelector.getEngine(engineType);
+        const engineName = engineType || this.engineSelector.getDefaultEngine();
+        this.logger.log(`Executing getSimple100K on ${engineName} engine`);
+        try {
+            const result = await engine.getSimple100K();
+            return {
+                ...result,
+                engine: engineName,
+            };
+        }
+        catch (error) {
+            this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+            throw error;
+        }
+    }
     async runBenchmark(queryType) {
         const engines = [
-            'postgresql-local',
             'postgresql-docker',
-            'clickhouse-local',
             'clickhouse-docker',
-            'duckdb-local',
             'duckdb-docker',
         ];
         const results = [];

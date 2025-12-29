@@ -13,5 +13,8 @@ export declare class AnalyticsController {
     getCustomerSpending(engine?: EngineType, limit?: number): Promise<AnalyticsResponseDto>;
     getCategoryDistribution(engine?: EngineType): Promise<AnalyticsResponseDto>;
     getStatusSummary(engine?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple1M(engine?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple5(engine?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple100K(engine?: EngineType): Promise<AnalyticsResponseDto>;
     runBenchmark(queryType: string): Promise<import("./dto").BenchmarkResponseDto>;
 }

@@ -344,4 +344,91 @@ export class DuckdbDockerEngine implements AnalyticsEngine, OnModuleInit {
       };
     }
   }
+
+  async getSimple1M(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM pg.public.transactions LIMIT 1000000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.runQueryInDocker(query);
+      const executionTimeMs = Date.now() - startTime;
+      return {
+        data: this.convertBigInts(result),
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'duckdb-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'duckdb-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple5(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM pg.public.transactions LIMIT 5`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.runQueryInDocker(query);
+      const executionTimeMs = Date.now() - startTime;
+      return {
+        data: this.convertBigInts(result),
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'duckdb-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'duckdb-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple100K(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM pg.public.transactions LIMIT 100000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.runQueryInDocker(query);
+      const executionTimeMs = Date.now() - startTime;
+      return {
+        data: this.convertBigInts(result),
+        executionTimeMs,
+        rowCount: result.length,
+        engine: 'duckdb-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'duckdb-docker',
+        error: error.message,
+      };
+    }
+  }
 }

@@ -18,4 +18,7 @@ export declare class PostgresqlDockerEngine implements AnalyticsEngine, OnModule
     getCustomerSpending(limit?: number): Promise<any>;
     getCategoryDistribution(): Promise<any>;
     getStatusSummary(): Promise<any>;
+    getSimple1M(): Promise<any>;
+    getSimple5(): Promise<any>;
+    getSimple100K(): Promise<any>;
 }

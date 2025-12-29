@@ -34,7 +34,7 @@ let ClickhouseEngine = class ClickhouseEngine {
         try {
             const { ClickHouse } = require('clickhouse');
             this.client = new ClickHouse({
-                url: 'http://localhost',
+                url: 'http://analytics-clickhouse-docker',
                 port: 8123,
                 debug: false,
                 basicAuth: {
@@ -289,6 +289,90 @@ let ClickhouseEngine = class ClickhouseEngine {
             }));
             return {
                 data: dataWithPercentage,
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'clickhouse-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'clickhouse-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple1M() {
+        if (!this.isAvailable || !this.client) {
+            return this.notAvailableResponse();
+        }
+        const transactionsPg = this.getPgTable('transactions');
+        const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 1000000`;
+        const startTime = Date.now();
+        try {
+            const result = await this.client.query(query).toPromise();
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result,
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'clickhouse-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'clickhouse-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple5() {
+        if (!this.isAvailable || !this.client) {
+            return this.notAvailableResponse();
+        }
+        const transactionsPg = this.getPgTable('transactions');
+        const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 5`;
+        const startTime = Date.now();
+        try {
+            const result = await this.client.query(query).toPromise();
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result,
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'clickhouse-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'clickhouse-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple100K() {
+        if (!this.isAvailable || !this.client) {
+            return this.notAvailableResponse();
+        }
+        const transactionsPg = this.getPgTable('transactions');
+        const query = `SELECT * FROM postgresql(${transactionsPg}) LIMIT 100000`;
+        const startTime = Date.now();
+        try {
+            const result = await this.client.query(query).toPromise();
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result,
                 executionTimeMs,
                 rowCount: result.length,
                 engine: 'clickhouse-docker',

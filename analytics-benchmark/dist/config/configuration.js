@@ -15,6 +15,6 @@ exports.default = () => ({
         user: process.env.CLICKHOUSE_USER || 'default',
         password: process.env.CLICKHOUSE_PASSWORD || '',
     },
-    defaultEngine: process.env.DEFAULT_ENGINE || 'postgresql',
+    defaultEngine: process.env.DEFAULT_ENGINE || 'postgresql-docker',
 });
 //# sourceMappingURL=configuration.js.map

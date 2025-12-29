@@ -113,6 +113,69 @@ export class AnalyticsService {
   }
 
   /**
+   * Simple SELECT query returning 1 million rows.
+   */
+  async getSimple1M(engineType?: EngineType): Promise<AnalyticsResponseDto> {
+    const engine = this.engineSelector.getEngine(engineType);
+    const engineName = engineType || this.engineSelector.getDefaultEngine();
+    
+    this.logger.log(`Executing getSimple1M on ${engineName} engine`);
+    
+    try {
+      const result = await engine.getSimple1M();
+      return {
+        ...result,
+        engine: engineName,
+      };
+    } catch (error) {
+      this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Simple SELECT query returning 5 rows.
+   */
+  async getSimple5(engineType?: EngineType): Promise<AnalyticsResponseDto> {
+    const engine = this.engineSelector.getEngine(engineType);
+    const engineName = engineType || this.engineSelector.getDefaultEngine();
+    
+    this.logger.log(`Executing getSimple5 on ${engineName} engine`);
+    
+    try {
+      const result = await engine.getSimple5();
+      return {
+        ...result,
+        engine: engineName,
+      };
+    } catch (error) {
+      this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Simple SELECT query returning 100k rows.
+   */
+  async getSimple100K(engineType?: EngineType): Promise<AnalyticsResponseDto> {
+    const engine = this.engineSelector.getEngine(engineType);
+    const engineName = engineType || this.engineSelector.getDefaultEngine();
+    
+    this.logger.log(`Executing getSimple100K on ${engineName} engine`);
+    
+    try {
+      const result = await engine.getSimple100K();
+      return {
+        ...result,
+        engine: engineName,
+      };
+    } catch (error) {
+      this.logger.error(`Error executing query on ${engineName}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
    * Runs the specified query across all available engines to compare performance.
    */
   async runBenchmark(queryType: string): Promise<BenchmarkResponseDto> {

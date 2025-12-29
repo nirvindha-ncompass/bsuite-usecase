@@ -21,8 +21,8 @@ let PostgresqlDockerEngine = class PostgresqlDockerEngine {
     async onModuleInit() {
         try {
             this.pool = new pg_1.Pool({
-                host: 'localhost',
-                port: 5433,
+                host: 'postgres-docker',
+                port: 5432,
                 database: 'datastuff',
                 user: 'postgres',
                 password: 'Password',
@@ -232,6 +232,87 @@ let PostgresqlDockerEngine = class PostgresqlDockerEngine {
       GROUP BY status
       ORDER BY count DESC
     `;
+        const startTime = Date.now();
+        try {
+            const result = await this.pool.query(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result.rows,
+                executionTimeMs,
+                rowCount: result.rowCount,
+                engine: 'postgresql-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'postgresql-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple1M() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM transactions LIMIT 1000000`;
+        const startTime = Date.now();
+        try {
+            const result = await this.pool.query(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result.rows,
+                executionTimeMs,
+                rowCount: result.rowCount,
+                engine: 'postgresql-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'postgresql-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple5() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM transactions LIMIT 5`;
+        const startTime = Date.now();
+        try {
+            const result = await this.pool.query(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: result.rows,
+                executionTimeMs,
+                rowCount: result.rowCount,
+                engine: 'postgresql-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'postgresql-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple100K() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM transactions LIMIT 100000`;
         const startTime = Date.now();
         try {
             const result = await this.pool.query(query);

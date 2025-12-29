@@ -110,4 +110,16 @@ export const analyticsApi = {
   async getStatusSummary(engine: EngineType): Promise<AnalyticsResponse> {
     return this.runQuery('status-summary', engine);
   },
+
+  async getSimple1M(engine: EngineType): Promise<AnalyticsResponse> {
+    return this.runQuery('simple-1m', engine);
+  },
+
+  async getSimple5(engine: EngineType): Promise<AnalyticsResponse> {
+    return this.runQuery('simple-5', engine);
+  },
+
+  async getSimple100K(engine: EngineType): Promise<AnalyticsResponse> {
+    return this.runQuery('simple-100k', engine);
+  },
 };

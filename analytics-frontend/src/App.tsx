@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { analyticsApi, EngineType, AnalyticsResponse, BenchmarkResponse } from './api/analytics';
 
-type QueryType = 'revenue-by-merchant' | 'daily-transactions' | 'customer-spending' | 'category-distribution' | 'status-summary';
+type QueryType = 'revenue-by-merchant' | 'daily-transactions' | 'customer-spending' | 'category-distribution' | 'status-summary' | 'simple-1m' | 'simple-5' | 'simple-100k';
 
 interface QueryOption {
     id: QueryType;
@@ -24,6 +24,9 @@ const QUERY_OPTIONS: QueryOption[] = [
     { id: 'customer-spending', title: 'Customer Spending', description: 'Top customers by spending', rowsAffected: '~1M' },
     { id: 'category-distribution', title: 'Category Distribution', description: 'Transactions by category', rowsAffected: '~10' },
     { id: 'status-summary', title: 'Status Summary', description: 'Transaction status breakdown', rowsAffected: '~5' },
+    { id: 'simple-1m', title: 'Simple SELECT 1M', description: 'Simple SELECT query', rowsAffected: '1M' },
+    { id: 'simple-5', title: 'Simple SELECT 5', description: 'Simple SELECT query', rowsAffected: '5' },
+    { id: 'simple-100k', title: 'Simple SELECT 100K', description: 'Simple SELECT query', rowsAffected: '100K' },
 ];
 
 const ENGINES: EngineOption[] = [
@@ -73,6 +76,15 @@ function App() {
                     break;
                 case 'status-summary':
                     response = await analyticsApi.getStatusSummary(selectedEngine);
+                    break;
+                case 'simple-1m':
+                    response = await analyticsApi.getSimple1M(selectedEngine);
+                    break;
+                case 'simple-5':
+                    response = await analyticsApi.getSimple5(selectedEngine);
+                    break;
+                case 'simple-100k':
+                    response = await analyticsApi.getSimple100K(selectedEngine);
                     break;
                 default:
                     throw new Error('Unknown query type');
@@ -129,6 +141,17 @@ function App() {
                                 response = await analyticsApi.getCategoryDistribution(engine.id);
                                 break;
                             case 'status-summary':
+                                response = await analyticsApi.getStatusSummary(engine.id);
+                                break;
+                            case 'simple-1m':
+                                response = await analyticsApi.getSimple1M(engine.id);
+                                break;
+                            case 'simple-5':
+                                response = await analyticsApi.getSimple5(engine.id);
+                                break;
+                            case 'simple-100k':
+                                response = await analyticsApi.getSimple100K(engine.id);
+                                break;
                             default:
                                 response = await analyticsApi.getStatusSummary(engine.id);
                                 break;

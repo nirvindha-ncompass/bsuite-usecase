@@ -280,4 +280,94 @@ export class PostgresqlDockerEngine implements AnalyticsEngine, OnModuleInit {
       };
     }
   }
+
+  async getSimple1M(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM transactions LIMIT 1000000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.pool.query(query);
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result.rows,
+        executionTimeMs,
+        rowCount: result.rowCount,
+        engine: 'postgresql-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'postgresql-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple5(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM transactions LIMIT 5`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.pool.query(query);
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result.rows,
+        executionTimeMs,
+        rowCount: result.rowCount,
+        engine: 'postgresql-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'postgresql-docker',
+        error: error.message,
+      };
+    }
+  }
+
+  async getSimple100K(): Promise<any> {
+    if (!this.isAvailable) {
+      return this.notAvailableResponse();
+    }
+
+    const query = `SELECT * FROM transactions LIMIT 100000`;
+
+    const startTime = Date.now();
+    try {
+      const result = await this.pool.query(query);
+      const executionTimeMs = Date.now() - startTime;
+
+      return {
+        data: result.rows,
+        executionTimeMs,
+        rowCount: result.rowCount,
+        engine: 'postgresql-docker',
+        query: query.trim(),
+      };
+    } catch (error) {
+      return {
+        data: [],
+        executionTimeMs: Date.now() - startTime,
+        rowCount: 0,
+        engine: 'postgresql-docker',
+        error: error.message,
+      };
+    }
+  }
 }

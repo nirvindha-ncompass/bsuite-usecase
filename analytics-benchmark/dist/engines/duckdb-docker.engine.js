@@ -308,6 +308,87 @@ let DuckdbDockerEngine = class DuckdbDockerEngine {
             };
         }
     }
+    async getSimple1M() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM pg.public.transactions LIMIT 1000000`;
+        const startTime = Date.now();
+        try {
+            const result = await this.runQueryInDocker(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: this.convertBigInts(result),
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'duckdb-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'duckdb-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple5() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM pg.public.transactions LIMIT 5`;
+        const startTime = Date.now();
+        try {
+            const result = await this.runQueryInDocker(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: this.convertBigInts(result),
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'duckdb-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'duckdb-docker',
+                error: error.message,
+            };
+        }
+    }
+    async getSimple100K() {
+        if (!this.isAvailable) {
+            return this.notAvailableResponse();
+        }
+        const query = `SELECT * FROM pg.public.transactions LIMIT 100000`;
+        const startTime = Date.now();
+        try {
+            const result = await this.runQueryInDocker(query);
+            const executionTimeMs = Date.now() - startTime;
+            return {
+                data: this.convertBigInts(result),
+                executionTimeMs,
+                rowCount: result.length,
+                engine: 'duckdb-docker',
+                query: query.trim(),
+            };
+        }
+        catch (error) {
+            return {
+                data: [],
+                executionTimeMs: Date.now() - startTime,
+                rowCount: 0,
+                engine: 'duckdb-docker',
+                error: error.message,
+            };
+        }
+    }
 };
 exports.DuckdbDockerEngine = DuckdbDockerEngine;
 exports.DuckdbDockerEngine = DuckdbDockerEngine = __decorate([

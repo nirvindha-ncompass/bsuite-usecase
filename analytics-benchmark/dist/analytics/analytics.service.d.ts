@@ -13,6 +13,9 @@ export declare class AnalyticsService {
     getCustomerSpending(engineType?: EngineType, limit?: number): Promise<AnalyticsResponseDto>;
     getCategoryDistribution(engineType?: EngineType): Promise<AnalyticsResponseDto>;
     getStatusSummary(engineType?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple1M(engineType?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple5(engineType?: EngineType): Promise<AnalyticsResponseDto>;
+    getSimple100K(engineType?: EngineType): Promise<AnalyticsResponseDto>;
     runBenchmark(queryType: string): Promise<BenchmarkResponseDto>;
     private generateComparison;
 }

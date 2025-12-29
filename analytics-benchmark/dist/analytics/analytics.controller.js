@@ -39,6 +39,15 @@ let AnalyticsController = class AnalyticsController {
     async getStatusSummary(engine) {
         return this.analyticsService.getStatusSummary(engine);
     }
+    async getSimple1M(engine) {
+        return this.analyticsService.getSimple1M(engine);
+    }
+    async getSimple5(engine) {
+        return this.analyticsService.getSimple5(engine);
+    }
+    async getSimple100K(engine) {
+        return this.analyticsService.getSimple100K(engine);
+    }
     async runBenchmark(queryType) {
         return this.analyticsService.runBenchmark(queryType);
     }
@@ -55,7 +64,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('revenue-by-merchant'),
     (0, swagger_1.ApiOperation)({ summary: 'Get revenue aggregated by merchant' }),
-    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
     (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns merchant revenue data', type: dto_1.AnalyticsResponseDto }),
     __param(0, (0, common_1.Query)('engine')),
@@ -67,7 +76,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('daily-transactions'),
     (0, swagger_1.ApiOperation)({ summary: 'Get daily transaction volumes' }),
-    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
     (0, swagger_1.ApiQuery)({ name: 'days', required: false, type: Number }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns daily transaction data', type: dto_1.AnalyticsResponseDto }),
     __param(0, (0, common_1.Query)('engine')),
@@ -79,7 +88,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('customer-spending'),
     (0, swagger_1.ApiOperation)({ summary: 'Get top customers by spending' }),
-    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
     (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns customer spending data', type: dto_1.AnalyticsResponseDto }),
     __param(0, (0, common_1.Query)('engine')),
@@ -91,7 +100,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('category-distribution'),
     (0, swagger_1.ApiOperation)({ summary: 'Get transaction distribution by category' }),
-    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns category distribution data', type: dto_1.AnalyticsResponseDto }),
     __param(0, (0, common_1.Query)('engine')),
     __metadata("design:type", Function),
@@ -101,7 +110,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('status-summary'),
     (0, swagger_1.ApiOperation)({ summary: 'Get transaction status summary' }),
-    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-local', 'postgresql-docker', 'clickhouse-local', 'clickhouse-docker', 'duckdb-local', 'duckdb-docker'] }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns status summary data', type: dto_1.AnalyticsResponseDto }),
     __param(0, (0, common_1.Query)('engine')),
     __metadata("design:type", Function),
@@ -109,9 +118,39 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AnalyticsController.prototype, "getStatusSummary", null);
 __decorate([
+    (0, common_1.Get)('simple-1m'),
+    (0, swagger_1.ApiOperation)({ summary: 'Simple SELECT query - 1 million rows' }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns 1M rows from transactions', type: dto_1.AnalyticsResponseDto }),
+    __param(0, (0, common_1.Query)('engine')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AnalyticsController.prototype, "getSimple1M", null);
+__decorate([
+    (0, common_1.Get)('simple-5'),
+    (0, swagger_1.ApiOperation)({ summary: 'Simple SELECT query - 5 rows' }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns 5 rows from transactions', type: dto_1.AnalyticsResponseDto }),
+    __param(0, (0, common_1.Query)('engine')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AnalyticsController.prototype, "getSimple5", null);
+__decorate([
+    (0, common_1.Get)('simple-100k'),
+    (0, swagger_1.ApiOperation)({ summary: 'Simple SELECT query - 100K rows' }),
+    (0, swagger_1.ApiQuery)({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns 100K rows from transactions', type: dto_1.AnalyticsResponseDto }),
+    __param(0, (0, common_1.Query)('engine')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AnalyticsController.prototype, "getSimple100K", null);
+__decorate([
     (0, common_1.Get)('benchmark'),
     (0, swagger_1.ApiOperation)({ summary: 'Run a query across all engines and compare performance' }),
-    (0, swagger_1.ApiQuery)({ name: 'query', required: true, enum: ['revenue-by-merchant', 'daily-transactions', 'customer-spending', 'category-distribution', 'status-summary'] }),
+    (0, swagger_1.ApiQuery)({ name: 'query', required: true, enum: ['revenue-by-merchant', 'daily-transactions', 'customer-spending', 'category-distribution', 'status-summary', 'simple-1m', 'simple-5', 'simple-100k'] }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns performance comparison across engines' }),
     __param(0, (0, common_1.Query)('query')),
     __metadata("design:type", Function),

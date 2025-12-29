@@ -103,12 +103,51 @@ export class AnalyticsController {
   }
 
   /**
+   * Simple SELECT query returning 1 million rows.
+   */
+  @Get('simple-1m')
+  @ApiOperation({ summary: 'Simple SELECT query - 1 million rows' })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
+  @ApiResponse({ status: 200, description: 'Returns 1M rows from transactions', type: AnalyticsResponseDto })
+  async getSimple1M(
+    @Query('engine') engine?: EngineType,
+  ): Promise<AnalyticsResponseDto> {
+    return this.analyticsService.getSimple1M(engine);
+  }
+
+  /**
+   * Simple SELECT query returning 5 rows.
+   */
+  @Get('simple-5')
+  @ApiOperation({ summary: 'Simple SELECT query - 5 rows' })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
+  @ApiResponse({ status: 200, description: 'Returns 5 rows from transactions', type: AnalyticsResponseDto })
+  async getSimple5(
+    @Query('engine') engine?: EngineType,
+  ): Promise<AnalyticsResponseDto> {
+    return this.analyticsService.getSimple5(engine);
+  }
+
+  /**
+   * Simple SELECT query returning 100k rows.
+   */
+  @Get('simple-100k')
+  @ApiOperation({ summary: 'Simple SELECT query - 100K rows' })
+  @ApiQuery({ name: 'engine', required: false, enum: ['postgresql-docker', 'clickhouse-docker', 'duckdb-docker'] })
+  @ApiResponse({ status: 200, description: 'Returns 100K rows from transactions', type: AnalyticsResponseDto })
+  async getSimple100K(
+    @Query('engine') engine?: EngineType,
+  ): Promise<AnalyticsResponseDto> {
+    return this.analyticsService.getSimple100K(engine);
+  }
+
+  /**
    * Run a query across all engines and compare performance.
    * @param queryType - The type of query to benchmark.
    */
   @Get('benchmark')
   @ApiOperation({ summary: 'Run a query across all engines and compare performance' })
-  @ApiQuery({ name: 'query', required: true, enum: ['revenue-by-merchant', 'daily-transactions', 'customer-spending', 'category-distribution', 'status-summary'] })
+  @ApiQuery({ name: 'query', required: true, enum: ['revenue-by-merchant', 'daily-transactions', 'customer-spending', 'category-distribution', 'status-summary', 'simple-1m', 'simple-5', 'simple-100k'] })
   @ApiResponse({ status: 200, description: 'Returns performance comparison across engines' })
   async runBenchmark(
     @Query('query') queryType: string,

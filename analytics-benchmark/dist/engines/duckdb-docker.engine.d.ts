@@ -19,4 +19,7 @@ export declare class DuckdbDockerEngine implements AnalyticsEngine, OnModuleInit
     getCustomerSpending(limit?: number): Promise<any>;
     getCategoryDistribution(): Promise<any>;
     getStatusSummary(): Promise<any>;
+    getSimple1M(): Promise<any>;
+    getSimple5(): Promise<any>;
+    getSimple100K(): Promise<any>;
 }
