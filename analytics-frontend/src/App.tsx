@@ -94,60 +94,75 @@ function App() {
         setBenchmarking(true);
         setError(null);
         setResult(null);
-        setProgress({ current: 0, total: 3, engine: '' });
+        const totalRuns = ENGINES.length * 5; // 3 engines × 5 runs each
+        setProgress({ current: 0, total: totalRuns, engine: '' });
 
         try {
-            // Run queries sequentially and update progress
             const results: any[] = [];
+            let currentRun = 0;
 
+            // Run each engine 5 times
             for (let i = 0; i < ENGINES.length; i++) {
                 const engine = ENGINES[i];
-                setProgress({ current: i, total: 3, engine: engine.label });
+                const runs: number[] = [];
 
-                try {
-                    let response: AnalyticsResponse;
-                    switch (selectedQuery) {
-                        case 'revenue-by-merchant':
-                            response = await analyticsApi.getRevenueByMerchant(engine.id);
-                            break;
-                        case 'daily-transactions':
-                            response = await analyticsApi.getDailyTransactions(engine.id);
-                            break;
-                        case 'customer-spending':
-                            response = await analyticsApi.getCustomerSpending(engine.id);
-                            break;
-                        case 'category-distribution':
-                            response = await analyticsApi.getCategoryDistribution(engine.id);
-                            break;
-                        case 'status-summary':
-                        default:
-                            response = await analyticsApi.getStatusSummary(engine.id);
-                            break;
+                for (let runNum = 1; runNum <= 5; runNum++) {
+                    setProgress({
+                        current: currentRun,
+                        total: totalRuns,
+                        engine: `${engine.label} (Run ${runNum}/5)`
+                    });
+
+                    try {
+                        let response: AnalyticsResponse;
+                        switch (selectedQuery) {
+                            case 'revenue-by-merchant':
+                                response = await analyticsApi.getRevenueByMerchant(engine.id);
+                                break;
+                            case 'daily-transactions':
+                                response = await analyticsApi.getDailyTransactions(engine.id);
+                                break;
+                            case 'customer-spending':
+                                response = await analyticsApi.getCustomerSpending(engine.id);
+                                break;
+                            case 'category-distribution':
+                                response = await analyticsApi.getCategoryDistribution(engine.id);
+                                break;
+                            case 'status-summary':
+                            default:
+                                response = await analyticsApi.getStatusSummary(engine.id);
+                                break;
+                        }
+
+                        if (!response.error && response.executionTimeMs) {
+                            runs.push(response.executionTimeMs);
+                        }
+                    } catch (err) {
+                        console.error(`Run ${runNum} failed for ${engine.label}:`, err);
                     }
 
-                    results.push({
-                        engine: engine.id,
-                        executionTimeMs: response.executionTimeMs,
-                        rowCount: response.rowCount,
-                        success: !response.error,
-                        error: response.error || null,
-                    });
-                } catch (err) {
-                    results.push({
-                        engine: engine.id,
-                        executionTimeMs: null,
-                        rowCount: null,
-                        success: false,
-                        error: err instanceof Error ? err.message : 'Failed',
-                    });
+                    currentRun++;
                 }
+
+                // Calculate average
+                const average = runs.length > 0
+                    ? runs.reduce((sum, time) => sum + time, 0) / runs.length
+                    : null;
+
+                results.push({
+                    engine: engine.id,
+                    runs: runs,
+                    average: average,
+                    success: runs.length > 0,
+                    error: runs.length === 0 ? 'All runs failed' : null,
+                });
             }
 
-            setProgress({ current: 3, total: 3, engine: 'Complete' });
+            setProgress({ current: totalRuns, total: totalRuns, engine: 'Complete' });
 
-            // Find fastest
-            const successfulResults = results.filter(r => r.success && r.executionTimeMs > 0);
-            successfulResults.sort((a, b) => a.executionTimeMs - b.executionTimeMs);
+            // Find fastest average
+            const successfulResults = results.filter(r => r.success && r.average);
+            successfulResults.sort((a, b) => a.average - b.average);
 
             setBenchmarkResult({
                 queryType: selectedQuery,
@@ -164,16 +179,54 @@ function App() {
     };
 
     /**
+     * Exports benchmark results to CSV format
+     */
+    const exportBenchmarkToCSV = () => {
+        if (!benchmarkResult) return;
+
+        const queryName = QUERY_OPTIONS.find(q => q.id === benchmarkResult.queryType)?.title || benchmarkResult.queryType;
+        const rows = benchmarkResult.results.map(result => {
+            const engineLabel = getEngineLabel(result.engine);
+            const runs = result.runs || [];
+            const run1 = runs[0] || '';
+            const run2 = runs[1] || '';
+            const run3 = runs[2] || '';
+            const run4 = runs[3] || '';
+            const run5 = runs[4] || '';
+            const average = result.average ? result.average.toFixed(2) : '';
+
+            return `${queryName},${engineLabel},${run1},${run2},${run3},${run4},${run5},${average}`;
+        });
+
+        const csvContent = [
+            'Query Type,Engine,Run 1 (ms),Run 2 (ms),Run 3 (ms),Run 4 (ms),Run 5 (ms),Average (ms)',
+            ...rows
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', `benchmark_${benchmarkResult.queryType}_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    /**
      * Generates a text summary comparing benchmark results.
      */
     const generateComparison = (results: any[]): string => {
-        const successful = results.filter(r => r.success && r.executionTimeMs > 0);
+        const successful = results.filter(r => r.success && r.average);
         if (successful.length === 0) return 'No successful executions';
 
-        const fastest = Math.min(...successful.map(r => r.executionTimeMs));
-        const fastestEngine = successful.find(r => r.executionTimeMs === fastest);
+        const fastest = Math.min(...successful.map(r => r.average));
+        const fastestEngine = successful.find(r => r.average === fastest);
 
-        return `Fastest: ${getEngineLabel(fastestEngine?.engine)} at ${fastest}ms`;
+        return `Fastest Average: ${getEngineLabel(fastestEngine?.engine)} at ${fastest.toFixed(2)}ms`;
     };
 
     const getEngineLabel = (engineId: string | undefined): string => {
@@ -352,9 +405,16 @@ function App() {
                         <div className="card">
                             <div className="card-header">
                                 <h2 className="card-title">🏆 Benchmark Results</h2>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={exportBenchmarkToCSV}
+                                    style={{ marginLeft: 'auto' }}
+                                >
+                                    📥 Export to CSV
+                                </button>
                             </div>
                             <div className="benchmark-grid">
-                                {benchmarkResult.results.map((res) => {
+                                {benchmarkResult.results.map((res: any) => {
                                     const isFastest = res.success && res.engine === benchmarkResult.fastest;
                                     return (
                                         <div
@@ -371,11 +431,11 @@ function App() {
                                             {res.success ? (
                                                 <>
                                                     <div className="benchmark-time">
-                                                        {formatNumber(res.executionTimeMs)}
-                                                        <span className="benchmark-time-unit">ms</span>
+                                                        {res.average ? formatNumber(res.average) : 'N/A'}
+                                                        <span className="benchmark-time-unit">ms avg</span>
                                                     </div>
                                                     <div className="benchmark-rows">
-                                                        {formatNumber(res.rowCount)} rows
+                                                        {res.runs?.length || 0} runs
                                                     </div>
                                                 </>
                                             ) : (

@@ -28,8 +28,10 @@ export interface AnalyticsResponse {
  */
 export interface BenchmarkResult {
   engine: string;
-  executionTimeMs: number | null;
-  rowCount: number | null;
+  executionTimeMs?: number | null;
+  rowCount?: number | null;
+  runs?: number[];
+  average?: number | null;
   success: boolean;
   error: string | null;
 }
