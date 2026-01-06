@@ -192,49 +192,97 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid transparent;
   border-radius: var(--radius-md);
-  background: transparent;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
   color: var(--color-text-secondary);
   font-family: var(--font-family);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.engine-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  padding: 2px;
+  background: linear-gradient(135deg, transparent 0%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-base);
 }
 
 .engine-button:hover {
-  background: var(--color-bg-tertiary);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   color: var(--color-text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .engine-button.active {
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 
 .engine-button.active.postgresql {
-  background: var(--color-postgresql);
-  color: white;
+  background: linear-gradient(135deg, #3da396 0%, #4a8fc4 100%);
+  box-shadow: 0 8px 24px rgba(51, 103, 145, 0.5), 0 0 20px rgba(51, 103, 145, 0.3);
+}
+
+.engine-button.active.postgresql::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  opacity: 1;
 }
 
 .engine-button.active.clickhouse {
-  background: var(--color-clickhouse);
-  color: #000;
+  background: linear-gradient(135deg, #008b79 0%, #0ea13f 100%);
+  box-shadow: 0 8px 24px rgba(105, 223, 223, 0.295), 0 0 20px rgba(105, 223, 223, 0.295);
+}
+
+.engine-button.active.clickhouse::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  opacity: 1;
 }
 
 .engine-button.active.duckdb {
-  background: var(--color-duckdb);
-  color: #000;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  box-shadow: 0 8px 24px rgba(255, 193, 7, 0.5), 0 0 20px rgba(255, 193, 7, 0.3);
+}
+
+.engine-button.active.duckdb::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  opacity: 1;
 }
 
 .engine-indicator {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
 }
 
 /* Engine Groups */
@@ -265,6 +313,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
+  background: var(--color-bg-card);
 }
 
 .query-button {
@@ -273,45 +322,72 @@ body {
   align-items: flex-start;
   gap: var(--spacing-xs);
   padding: var(--spacing-lg);
-  border: 1px solid var(--color-border);
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
-  background: var(--color-bg-secondary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
   color: var(--color-text-primary);
   font-family: var(--font-family);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
   text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.query-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.query-button:hover::before {
+  opacity: 1;
 }
 
 .query-button:hover {
   border-color: var(--color-primary);
-  background: var(--color-bg-tertiary);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3), 0 0 20px rgba(99, 102, 241, 0.2);
 }
 
 .query-button.active {
   border-color: var(--color-primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .query-button-title {
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  
 }
 
 .query-button-desc {
   font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
 }
 
 .rows-badge {
   font-size: var(--font-size-xs);
-  font-weight: 500;
-  color: var(--color-primary-light);
-  background: rgba(99, 102, 241, 0.15);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  margin-left: 4px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 /* =============================================================================
